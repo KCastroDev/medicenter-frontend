@@ -1,0 +1,79 @@
+<a routerLink="/medicos" class="btn btn-link px-0 mb-2">&larr; Volver a medicos</a>
+
+@if (medico(); as m) {
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="mb-1">{{ m.nombre }}</h4>
+      <span class="badge bg-info text-dark">{{ m.especialidad }}</span>
+      <p class="text-muted mt-2 mb-0">{{ m.sede }} &middot; {{ m.distrito }}</p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">1. Elige el dia y el horario</h5>
+      <div class="row g-3 align-items-end mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Dia de la cita</label>
+          <input type="date" class="form-control" [(ngModel)]="dia" name="dia">
+        </div>
+        <div class="col-md-6 d-grid">
+          <button class="btn btn-primary" (click)="buscarHorarios()" [disabled]="!dia">
+            Ver horarios disponibles
+          </button>
+        </div>
+      </div>
+
+      @if (horarios().length > 0) {
+        <div class="d-flex flex-wrap gap-2">
+          @for (h of horarios(); track h) {
+            <button type="button" class="btn"
+                    [class.btn-success]="horarioElegido() === h"
+                    [class.btn-outline-success]="horarioElegido() !== h"
+                    (click)="elegir(h)">
+              {{ soloHora(h) }}
+            </button>
+          }
+        </div>
+      } @else if (dia) {
+        <p class="text-muted mb-0">No hay horarios libres ese dia. Prueba con otra fecha.</p>
+      }
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">2. Tus datos</h5>
+
+      <div class="alert alert-warning py-2">Verifica los detalles antes de agendar.</div>
+
+      <div class="mb-3">
+        <label class="form-label">DNI</label>
+        <input type="text" class="form-control" maxlength="8" placeholder="8 digitos"
+               [(ngModel)]="dni" name="dni">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Celular (WhatsApp)</label>
+        <input type="text" class="form-control" maxlength="9" placeholder="9 digitos, inicia en 9"
+               [(ngModel)]="celular" name="celular">
+      </div>
+
+      @if (mensajeError()) {
+        <div class="alert alert-danger">{{ mensajeError() }}</div>
+      }
+      @if (mensajeExito()) {
+        <div class="alert alert-success">{{ mensajeExito() }}</div>
+      }
+
+      <button class="btn btn-success w-100" [disabled]="!formularioValido" (click)="confirmar()">
+        Confirmar y agendar cita
+      </button>
+    </div>
+  </div>
+} @else {
+  <p class="text-muted">Cargando medico...</p>
+}

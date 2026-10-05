@@ -1,0 +1,50 @@
+<h3 class="mb-3">Buscar especialistas</h3>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-5">
+        <label class="form-label">Especialidad</label>
+        <input type="text" class="form-control" placeholder="Ej: Cardiologia"
+               [(ngModel)]="especialidad" name="especialidad">
+      </div>
+      <div class="col-md-5">
+        <label class="form-label">Distrito</label>
+        <input type="text" class="form-control" placeholder="Ej: San Borja"
+               [(ngModel)]="distrito" name="distrito">
+      </div>
+      <div class="col-md-2 d-grid gap-2">
+        <button class="btn btn-primary" (click)="buscar()">Buscar</button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="limpiar()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (cargando()) {
+  <p class="text-muted">Cargando medicos...</p>
+} @else if (medicos().length === 0) {
+  <div class="alert alert-secondary">No se encontraron especialistas con esos criterios.</div>
+} @else {
+  <div class="row g-3">
+    @for (m of medicos(); track m.id) {
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h5 class="card-title mb-1">{{ m.nombre }}</h5>
+                <span class="badge bg-info text-dark">{{ m.especialidad }}</span>
+              </div>
+              <span class="text-warning fw-semibold">&#9733; {{ m.calificacion.toFixed(1) }}</span>
+            </div>
+            <p class="card-text text-muted mt-2 mb-3">
+              {{ m.sede }} &middot; {{ m.distrito }}
+            </p>
+            <a class="btn btn-success btn-sm" [routerLink]="['/reservar', m.id]">Reservar cita</a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

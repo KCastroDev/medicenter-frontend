@@ -1,0 +1,41 @@
+<h3 class="mb-3">Mis citas</h3>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-8">
+        <label class="form-label">Ingresa tu DNI para ver tus citas</label>
+        <input type="text" class="form-control" maxlength="8" placeholder="8 digitos"
+               [(ngModel)]="dni" name="dni">
+      </div>
+      <div class="col-md-4 d-grid">
+        <button class="btn btn-primary" (click)="buscar()">Buscar mis citas</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (buscado() && citas().length === 0) {
+  <div class="alert alert-secondary">No tienes citas registradas con ese DNI.</div>
+} @else if (citas().length > 0) {
+  <table class="table table-striped shadow-sm bg-white align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Fecha y hora</th>
+        <th>Medico</th>
+        <th>Especialidad</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of citas(); track c.id) {
+        <tr>
+          <td>{{ fecha(c.fechaHora) }}</td>
+          <td>{{ c.medico.nombre }}</td>
+          <td>{{ c.medico.especialidad }}</td>
+          <td><span class="badge bg-success">{{ c.estado }}</span></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
